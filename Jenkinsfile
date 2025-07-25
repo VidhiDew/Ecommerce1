@@ -19,12 +19,7 @@ pipeline {
                 bat 'mvn clean install'
             }
         }
-        stage('Docker Build') {
-			steps {
-				bat 'docker --version' //Optional : Verifies Docker CLI is working
-				bat 'docker build -t junit4-app:latest .'
-			}
-		}
+
         stage('Test') {
             steps {
                 bat 'mvn test'
