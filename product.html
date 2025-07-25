@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        input, button { padding: 6px; margin: 4px; }
+        table { border-collapse: collapse; margin-top: 20px; width: 100%; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h2>Add New Product</h2>
+    <form id="productForm">
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="text" id="description" placeholder="Description" required>
+        <input type="number" id="price" placeholder="Price" required>
+        <input type="number" id="quantity" placeholder="Quantity" required>
+        <button type="submit">Add Product</button>
+    </form>
+
+    <h2>Product List</h2>
+    <table id="productTable">
+        <thead>
+            <tr>
+                <th>ID</th><th>Name</th><th>Description</th><th>Price</th><th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        const apiUrl = 'http://localhost:8080/api/products';
+
+        // Fetch and display products
+        async function fetchProducts() {
+            const response = await fetch(apiUrl);
+            const products = await response.json();
+            const tableBody = document.querySelector('#productTable tbody');
+            tableBody.innerHTML = '';
+            products.forEach(p => {
+                const row = `<tr>
+                    <td>${p.id}</td>
+                    <td>${p.name}</td>
+                    <td>${p.description}</td>
+                    <td>${p.price}</td>
+                    <td>${p.quantity}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const newProduct = {
+                name: document.getElementById('name').value,
+                description: document.getElementById('description').value,
+                price: parseFloat(document.getElementById('price').value),
+                quantity: parseInt(document.getElementById('quantity').value)
+            };
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newProduct)
+            });
+
+            if (response.ok) {
+                alert("Product added successfully!");
+                fetchProducts();
+                document.getElementById('productForm').reset();
+            } else {
+                alert("Failed to add product.");
+            }
+        });
+
+        // Load products on page load
+        fetchProducts();
+    </script>
+</body>
+</html>
+   
