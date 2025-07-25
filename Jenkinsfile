@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.9.11'  // Must match Jenkins tools config
+        maven 'Maven 3.9.11'
     }
 
 	environment {
